@@ -1,0 +1,23 @@
+# ── Clases compiladas ─────────────────────────────────────────────
+WEB-INF/classes/
+WEB-INF/lib/
+
+# ── Base de datos Derby (se crea en el directorio de trabajo) ─────
+studyapp_db/
+
+# ── Logs de Derby ─────────────────────────────────────────────────
+derby.log
+
+# ── IDEs (da igual no usamos lol)──────────────────────────────────────────────────
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+*.suo
+*.user
+
+# ── Windows ───────────────────────────────────────────────────────
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/

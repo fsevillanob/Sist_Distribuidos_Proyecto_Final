@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StudyApp – Técnica Pomodoro</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Pomodoro specifics ───────────────────────── */
+    .pomo-ring-wrap {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      margin: 0 auto;
+    }
+    .pomo-svg {
+      transform: rotate(-90deg);
+      width: 280px;
+      height: 280px;
+    }
+    .pomo-track {
+      fill: none;
+      stroke: rgba(255,255,255,0.08);
+      stroke-width: 14;
+    }
+    .pomo-progress {
+      fill: none;
+      stroke-width: 14;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s linear, stroke 0.5s;
+    }
+    .pomo-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .pomo-time {
+      font-size: 3.8rem;
+      font-weight: 800;
+      letter-spacing: -2px;
+      color: #fff;
+      line-height: 1;
+    }
+    .pomo-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+
+    /* Mode tabs */
+    .pomo-tabs .nav-link {
+      color: rgba(255,255,255,0.5);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 18px;
+      transition: background 0.25s, color 0.25s;
+    }
+    .pomo-tabs .nav-link.active {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+    }
+
+    /* Botón principal */
+    .btn-pomo-main {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 12px 48px;
+      border-radius: 999px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-pomo-main:active { transform: scale(0.97); }
+
+    /* Sesiones dots */
+    .session-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: inline-block;
+      margin: 2px;
+      transition: background 0.3s;
+    }
+    .session-dot.done { background: #f97316; }
+
+    /* Settings card */
+    .pomo-settings input[type=number] {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.15);
+      color: #fff;
+      width: 80px;
+      text-align: center;
+    }
+    .pomo-settings input[type=number]:focus {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.4);
+      color: #fff;
+      box-shadow: none;
+    }
+    .pomo-settings label { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
+
+    /* History */
+    .history-item {
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.6);
+    }
+    .history-item.work   { border-left: 3px solid #f97316; }
+    .history-item.short  { border-left: 3px solid #22d3ee; }
+    .history-item.long   { border-left: 3px solid #a78bfa; }
+  </style>
+</head>
+<body class="app-bg d-flex flex-column min-vh-100">
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark app-navbar px-4">
+  <span class="navbar-brand fw-bold"><i class="bi bi-book-half me-2"></i>StudyApp</span>
+  <a href="menu" class="btn btn-outline-light btn-sm"><i class="bi bi-house me-1"></i>Menú</a>
+</nav>
+
+<main class="container py-4 flex-grow-1">
+  <div class="row justify-content-center gy-4">
+
+    <!-- ── Columna central: reloj ───────────────────────────── -->
+    <div class="col-lg-6">
+      <div class="card admin-card p-4 text-center">
+
+        <h4 class="text-white fw-bold mb-3"><i class="bi bi-stopwatch me-2 text-warning"></i>Técnica Pomodoro</h4>
+
+        <!-- Tabs de modo -->
+        <ul class="nav pomo-tabs justify-content-center mb-4" id="pomodoroTabs">
+          <li class="nav-item">
+            <button class="nav-link active" id="tabWork" onclick="setMode('work')">🍅 Enfoque</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="tabShort" onclick="setMode('short')">☕ Pausa corta</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="tabLong" onclick="setMode('long')">🛋️ Pausa larga</button>
+          </li>
+        </ul>
+
+        <!-- Anillo SVG -->
+        <div class="pomo-ring-wrap mb-4">
+          <svg class="pomo-svg" viewBox="0 0 280 280">
+            <circle class="pomo-track" cx="140" cy="140" r="120"/>
+            <circle class="pomo-progress" id="ring" cx="140" cy="140" r="120"
+                    stroke-dasharray="753.98" stroke-dashoffset="0"/>
+          </svg>
+          <div class="pomo-center">
+            <div class="pomo-time" id="timerDisplay">25:00</div>
+            <div class="pomo-label" id="modeLabel" style="color:#f97316">ENFOQUE</div>
+          </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="d-flex justify-content-center gap-3 mb-4">
+          <button class="btn btn-outline-secondary" onclick="resetTimer()" title="Reiniciar">
+            <i class="bi bi-arrow-counterclockwise fs-5"></i>
+          </button>
+          <button class="btn btn-warning btn-pomo-main" id="startBtn" onclick="toggleTimer()">
+            <i class="bi bi-play-fill me-1"></i> INICIAR
+          </button>
+          <button class="btn btn-outline-secondary" onclick="skipSession()" title="Saltar">
+            <i class="bi bi-skip-forward-fill fs-5"></i>
+          </button>
+        </div>
+
+        <!-- Sesiones completadas -->
+        <div class="mb-2">
+          <small class="text-white-50">Sesiones de enfoque</small>
+          <div id="sessionDots" class="mt-1"></div>
+        </div>
+        <small class="text-white-50" id="sessionCounter">0 de 4 completadas</small>
+
+      </div>
+    </div>
+
+    <!-- ── Columna derecha: configuración + historial ──────── -->
+    <div class="col-lg-4">
+
+      <!-- Configuración -->
+      <div class="card admin-card p-4 mb-4 pomo-settings">
+        <h6 class="text-white fw-bold mb-3"><i class="bi bi-gear me-2"></i>Configuración</h6>
+        <div class="row g-3">
+          <div class="col-6">
+            <label>🍅 Enfoque (min)</label>
+            <input type="number" id="cfgWork" value="25" min="1" max="90" class="form-control mt-1">
+          </div>
+          <div class="col-6">
+            <label>☕ Pausa corta</label>
+            <input type="number" id="cfgShort" value="5" min="1" max="30" class="form-control mt-1">
+          </div>
+          <div class="col-6">
+            <label>🛋️ Pausa larga</label>
+            <input type="number" id="cfgLong" value="15" min="1" max="60" class="form-control mt-1">
+          </div>
+          <div class="col-6">
+            <label>Sesiones/ciclo</label>
+            <input type="number" id="cfgSessions" value="4" min="1" max="12" class="form-control mt-1">
+          </div>
+        </div>
+        <button class="btn btn-outline-light btn-sm w-100 mt-3" onclick="applySettings()">
+          <i class="bi bi-check-lg me-1"></i>Aplicar
+        </button>
+      </div>
+
+      <!-- Historial -->
+      <div class="card admin-card p-4">
+        <h6 class="text-white fw-bold mb-3"><i class="bi bi-clock-history me-2"></i>Historial de hoy</h6>
+        <div id="historyList" class="d-flex flex-column gap-2">
+          <span class="text-white-50 small">Aún no hay sesiones completadas.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="text-center text-white-50 py-3 small">StudyApp &copy; 2025</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ──────────────────────────────────────────────────────────────────
+//  POMODORO LOGIC
+// ──────────────────────────────────────────────────────────────────
+
+const CIRCUMFERENCE = 2 * Math.PI * 120; // 753.98
+
+// ── Estado ────────────────────────────────────────────────────────
+let cfg = { work: 25, short: 5, long: 15, sessions: 4 };
+let mode = 'work';        // 'work' | 'short' | 'long'
+let totalSecs = 0;        // segundos totales del modo actual
+let remaining = 0;        // segundos restantes
+let running   = false;
+let interval  = null;
+let sessionsCompleted = 0;
+let history   = [];
+
+// Colores por modo
+const COLORS = {
+  work:  '#f97316',
+  short: '#22d3ee',
+  long:  '#a78bfa'
+};
+
+// ── Inicialización ────────────────────────────────────────────────
+function init() {
+  totalSecs = cfg[mode] * 60;
+  remaining = totalSecs;
+  renderTimer();
+  renderRing(1);
+  renderDots();
+}
+
+// ── Cambio de modo ────────────────────────────────────────────────
+function setMode(m) {
+  if (running) stopTimer();
+  mode = m;
+  document.querySelectorAll('.pomo-tabs .nav-link').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab' + m.charAt(0).toUpperCase() + m.slice(1)).classList.add('active');
+  init();
+  updateModeLabel();
+}
+
+function updateModeLabel() {
+  const labels = { work: 'ENFOQUE', short: 'PAUSA CORTA', long: 'PAUSA LARGA' };
+  document.getElementById('modeLabel').textContent = labels[mode];
+  document.getElementById('modeLabel').style.color = COLORS[mode];
+  document.getElementById('ring').style.stroke = COLORS[mode];
+  document.getElementById('startBtn').className =
+    'btn btn-pomo-main ' + (mode === 'work' ? 'btn-warning' : mode === 'short' ? 'btn-info' : 'btn-primary');
+}
+
+// ── Renderizado ───────────────────────────────────────────────────
+function renderTimer() {
+  const m = String(Math.floor(remaining / 60)).padStart(2,'0');
+  const s = String(remaining % 60).padStart(2,'0');
+  document.getElementById('timerDisplay').textContent = m + ':' + s;
+  document.title = m + ':' + s + ' – StudyApp Pomodoro';
+}
+
+function renderRing(fraction) {
+  const offset = CIRCUMFERENCE * (1 - fraction);
+  document.getElementById('ring').style.strokeDashoffset = offset;
+}
+
+function renderDots() {
+  const total = cfg.sessions;
+  let html = '';
+  for (let i = 0; i < total; i++) {
+    html += '<span class="session-dot' + (i < sessionsCompleted ? ' done' : '') + '"></span>';
+  }
+  document.getElementById('sessionDots').innerHTML = html;
+  document.getElementById('sessionCounter').textContent =
+    sessionsCompleted + ' de ' + total + ' completadas';
+}
+
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if (history.length === 0) {
+    el.innerHTML = '<span class="text-white-50 small">Aún no hay sesiones completadas.</span>';
+    return;
+  }
+  el.innerHTML = history.slice().reverse().map(h =>
+    `<div class="history-item ${h.mode}">
+       <strong>${h.label}</strong> – ${h.duration} min
+       <span class="float-end">${h.time}</span>
+     </div>`
+  ).join('');
+}
+
+// ── Control del temporizador ──────────────────────────────────────
+function toggleTimer() {
+  if (running) stopTimer(); else startTimer();
+}
+
+function startTimer() {
+  running = true;
+  document.getElementById('startBtn').innerHTML = '<i class="bi bi-pause-fill me-1"></i> PAUSAR';
+  interval = setInterval(tick, 1000);
+}
+
+function stopTimer() {
+  running = false;
+  clearInterval(interval);
+  document.getElementById('startBtn').innerHTML = '<i class="bi bi-play-fill me-1"></i> CONTINUAR';
+}
+
+function tick() {
+  if (remaining <= 0) {
+    sessionComplete();
+    return;
+  }
+  remaining--;
+  renderTimer();
+  renderRing(remaining / totalSecs);
+}
+
+function resetTimer() {
+  stopTimer();
+  remaining = totalSecs;
+  renderTimer();
+  renderRing(1);
+  document.getElementById('startBtn').innerHTML = '<i class="bi bi-play-fill me-1"></i> INICIAR';
+}
+
+function skipSession() {
+  if (running) stopTimer();
+  sessionComplete(true);
+}
+
+function sessionComplete(skipped) {
+  stopTimer();
+  const now = new Date();
+  const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+
+  if (!skipped) {
+    // Registrar en historial
+    const labels = { work: '🍅 Enfoque', short: '☕ Pausa corta', long: '🛋️ Pausa larga' };
+    history.push({
+      mode: mode,
+      label: labels[mode],
+      duration: cfg[mode],
+      time: timeStr
+    });
+    renderHistory();
+
+    // Sonido beep (sin librería externa)
+    playBeep();
+  }
+
+  if (mode === 'work') {
+    sessionsCompleted++;
+    if (sessionsCompleted >= cfg.sessions) {
+      sessionsCompleted = 0;
+    }
+    renderDots();
+    // Pausa larga cada cfg.sessions pomodoros, corta de lo contrario
+    const nextMode = (sessionsCompleted === 0) ? 'long' : 'short';
+    setMode(nextMode);
+    showToast(skipped ? 'Sesión saltada.' : '¡Pomodoro completado! Tómate un descanso 🎉');
+  } else {
+    setMode('work');
+    showToast(skipped ? 'Pausa saltada.' : '¡Descanso terminado! A por el siguiente 💪');
+  }
+
+  document.getElementById('startBtn').innerHTML = '<i class="bi bi-play-fill me-1"></i> INICIAR';
+}
+
+// ── Configuración ─────────────────────────────────────────────────
+function applySettings() {
+  cfg.work     = parseInt(document.getElementById('cfgWork').value)     || 25;
+  cfg.short    = parseInt(document.getElementById('cfgShort').value)    || 5;
+  cfg.long     = parseInt(document.getElementById('cfgLong').value)     || 15;
+  cfg.sessions = parseInt(document.getElementById('cfgSessions').value) || 4;
+  sessionsCompleted = 0;
+  if (running) stopTimer();
+  init();
+  renderDots();
+  showToast('Configuración aplicada ✓');
+}
+
+// ── Utilidades ────────────────────────────────────────────────────
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    gain.gain.setValueAtTime(0.4, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.8);
+  } catch(e) {}
+}
+
+function showToast(msg) {
+  // Bootstrap toast simple dinámico
+  let container = document.getElementById('toastContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.style = 'position:fixed;bottom:24px;right:24px;z-index:9999';
+    document.body.appendChild(container);
+  }
+  const id = 'toast_' + Date.now();
+  container.insertAdjacentHTML('beforeend', `
+    <div id="${id}" class="toast align-items-center text-bg-dark border-0 show" role="alert">
+      <div class="d-flex">
+        <div class="toast-body">${msg}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>`);
+  setTimeout(() => { const t = document.getElementById(id); if(t) t.remove(); }, 4000);
+}
+
+// ── Arranque ──────────────────────────────────────────────────────
+updateModeLabel();
+init();
+</script>
+</body>
+</html>
