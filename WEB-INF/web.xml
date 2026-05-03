@@ -54,6 +54,15 @@
         <url-pattern>/tareas</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>CalendarioServlet</servlet-name>
+        <servlet-class>CalendarioServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CalendarioServlet</servlet-name>
+        <url-pattern>/calendario</url-pattern>
+    </servlet-mapping>
+
     <!-- Redirigir raíz al login -->
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>

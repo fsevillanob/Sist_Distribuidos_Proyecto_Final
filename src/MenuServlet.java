@@ -84,12 +84,26 @@ public class MenuServlet extends HttpServlet {
         out.println("      <div class='card menu-card h-100 text-center p-4'>");
         out.println("        <div class='menu-icon mb-3'><i class='bi bi-calendar3'></i></div>");
         out.println("        <h4 class='card-title text-white'>Mi Calendario</h4>");
-        out.println("        <p class='card-text text-white-50'>Organiza tus tareas semanalmente.</p>");
+        out.println("        <p class='card-text text-white-50'>Organiza tus tareas.</p>");
         out.println("      </div>");
         out.println("    </a>");
         out.println("  </div>");
 
         out.println("  </div>"); // row
+
+        out.println("  <div class='col-md-4 col-sm-6'>");
+        out.println("    <a href='calendario' class='text-decoration-none'>");
+        out.println("      <div class='card menu-card h-100 text-center p-4'>");
+        out.println("        <div class='menu-icon mb-3'><i class='bi bi-calendar-event text-info'></i></div>");
+        out.println("        <h4 class='card-title text-white'>Calendario</h4>");
+        out.println("        <p class='card-text text-white-50'>Visualiza tus entregas y exámenes en vista mensual o semanal.</p>");
+        out.println("      </div>");
+        out.println("    </a>");
+        out.println("  </div>");
+
+
+
+
         out.println("</main>");
 
         out.println("<footer class='text-center text-white-50 py-3 small'>StudyApp &copy; 2025</footer>");
