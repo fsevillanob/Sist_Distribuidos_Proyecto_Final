@@ -78,6 +78,17 @@ public class MenuServlet extends HttpServlet {
             out.println("  </div>");
         }
 
+        // Tarjeta Tareas
+        out.println("  <div class='col-md-4 col-sm-6'>");
+        out.println("    <a href='tareas' class='text-decoration-none'>");
+        out.println("      <div class='card menu-card h-100 text-center p-4'>");
+        out.println("        <div class='menu-icon mb-3'><i class='bi bi-calendar3'></i></div>");
+        out.println("        <h4 class='card-title text-white'>Mi Calendario</h4>");
+        out.println("        <p class='card-text text-white-50'>Organiza tus tareas semanalmente.</p>");
+        out.println("      </div>");
+        out.println("    </a>");
+        out.println("  </div>");
+
         out.println("  </div>"); // row
         out.println("</main>");
 

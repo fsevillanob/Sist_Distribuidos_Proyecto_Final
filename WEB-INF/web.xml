@@ -45,6 +45,15 @@
         <url-pattern>/admin</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>TareaServlet</servlet-name>
+        <servlet-class>TareaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TareaServlet</servlet-name>
+        <url-pattern>/tareas</url-pattern>
+    </servlet-mapping>
+
     <!-- Redirigir raíz al login -->
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
