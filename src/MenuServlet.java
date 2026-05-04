@@ -80,10 +80,10 @@ public class MenuServlet extends HttpServlet {
 
         // Tarjeta Tareas
         out.println("  <div class='col-md-4 col-sm-6'>");
-        out.println("    <a href='tareas' class='text-decoration-none'>");
+        out.println("    <a href='tareas' class='text-decoration-none'>"); //rutas relativas, funciona, pero PENSAR en cambiar 
         out.println("      <div class='card menu-card h-100 text-center p-4'>");
         out.println("        <div class='menu-icon mb-3'><i class='bi bi-calendar3'></i></div>");
-        out.println("        <h4 class='card-title text-white'>Mi Calendario</h4>");
+        out.println("        <h4 class='card-title text-white'>Gestión de Tareas</h4>");
         out.println("        <p class='card-text text-white-50'>Organiza tus tareas.</p>");
         out.println("      </div>");
         out.println("    </a>");
