@@ -59,8 +59,7 @@ public class AdminServlet extends HttpServlet {
         // ── Formulario crear usuario ──────────────────────────────────────────
         out.println("  <div class='card admin-card mb-4 p-4'>");
         out.println("    <h5 class='text-white mb-3'><i class='bi bi-person-plus me-2'></i>Crear nuevo usuario</h5>");
-        out.println("    <form method='post' action='" + req.getContextPath() + "/admin' class='row g-3'>");
-        out.println("      <input type='hidden' name='accion' value='crear'>");
+        out.println("    <form method='post' action='" + req.getContextPath() + "/admin/crear' class='row g-3'>");
         out.println("      <div class='col-md-4'>");
         out.println("        <input type='text' class='form-control' name='username' placeholder='Nombre de usuario' required>");
         out.println("      </div>");
@@ -100,10 +99,9 @@ public class AdminServlet extends HttpServlet {
                 out.println("  <td>" + escHtml(uname) + "</td>");
                 out.println("  <td><span class='badge " + ("admin".equals(rol) ? "bg-warning text-dark" : "bg-secondary") + "'>" + rol + "</span></td>");
 
-                // Cambiar contraseña
+               // Cambiar contraseña
                 out.println("  <td>");
-                out.println("    <form method='post' action='" + req.getContextPath() + "/admin' class='d-flex gap-2'>");
-                out.println("      <input type='hidden' name='accion' value='password'>");
+                out.println("    <form method='post' action='" + req.getContextPath() + "/admin/password' class='d-flex gap-2'>");
                 out.println("      <input type='hidden' name='id' value='" + id + "'>");
                 out.println("      <input type='text' class='form-control form-control-sm' name='newpassword' placeholder='Nueva contraseña' required style='max-width:200px'>");
                 out.println("      <button type='submit' class='btn btn-warning btn-sm'><i class='bi bi-key'></i></button>");
@@ -112,8 +110,7 @@ public class AdminServlet extends HttpServlet {
 
                 // Eliminar
                 out.println("  <td>");
-                out.println("    <form method='post' action='" + req.getContextPath() + "/admin' onsubmit='return confirm(\"¿Seguro que quieres eliminar a \" + \"" + escHtml(uname) + "\" + \"?\")'>");
-                out.println("      <input type='hidden' name='accion' value='eliminar'>");
+                out.println("    <form method='post' action='" + req.getContextPath() + "/admin/eliminar' onsubmit='return confirm(\"¿Seguro que quieres eliminar a " + escHtml(uname) + "?\")'>");
                 out.println("      <input type='hidden' name='id' value='" + id + "'>");
                 out.println("      <button type='submit' class='btn btn-danger btn-sm'><i class='bi bi-trash'></i></button>");
                 out.println("    </form>");
@@ -135,48 +132,6 @@ public class AdminServlet extends HttpServlet {
         out.println("<footer class='text-center text-white-50 py-3 small'>StudyApp &copy; 2025</footer>");
         out.println("<script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>");
         out.println("</body></html>");
-    }
-
-    // ─── POST: procesar acciones ─────────────────────────────────────────────
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
-
-        if (!checkAdmin(req, res)) return;
-        req.setCharacterEncoding("UTF-8");
-
-        String accion = req.getParameter("accion");
-        String base   = req.getContextPath() + "/admin";
-
-        try {
-            switch (accion == null ? "" : accion) {
-                case "crear": {
-                    String u = req.getParameter("username");
-                    String p = req.getParameter("password");
-                    String r = req.getParameter("rol");
-                    DBManager.crearUsuario(u, p, r);
-                    res.sendRedirect(base + "?msg=Usuario+creado+correctamente");
-                    break;
-                }
-                case "password": {
-                    int id = Integer.parseInt(req.getParameter("id"));
-                    String np = req.getParameter("newpassword");
-                    DBManager.cambiarPassword(id, np);
-                    res.sendRedirect(base + "?msg=Contrase%C3%B1a+actualizada");
-                    break;
-                }
-                case "eliminar": {
-                    int id = Integer.parseInt(req.getParameter("id"));
-                    DBManager.eliminarUsuario(id);
-                    res.sendRedirect(base + "?msg=Usuario+eliminado");
-                    break;
-                }
-                default:
-                    res.sendRedirect(base);
-            }
-        } catch (Exception e) {
-            res.sendRedirect(base + "?error=" + java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
-        }
     }
 
     private boolean checkAdmin(HttpServletRequest req, HttpServletResponse res) throws IOException {

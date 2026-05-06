@@ -62,6 +62,32 @@
         <servlet-name>CalendarioServlet</servlet-name>
         <url-pattern>/calendario</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>CrearUsuarioServlet</servlet-name>
+        <servlet-class>CrearUsuarioServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CrearUsuarioServlet</servlet-name>
+        <url-pattern>/admin/crear</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CambiarPasswordServlet</servlet-name>
+        <servlet-class>CambiarPasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CambiarPasswordServlet</servlet-name>
+        <url-pattern>/admin/password</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>EliminarUsuarioServlet</servlet-name>
+        <servlet-class>EliminarUsuarioServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EliminarUsuarioServlet</servlet-name>
+        <url-pattern>/admin/eliminar</url-pattern>
+    </servlet-mapping>
 
     <!-- Redirigir raíz al login -->
     <welcome-file-list>
@@ -72,5 +98,26 @@
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+
+
+    <!-- ENCODING UTF-8?  -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ignore</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
 
 </web-app>

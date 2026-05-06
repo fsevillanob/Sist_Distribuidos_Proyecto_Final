@@ -21,7 +21,7 @@ timeout /t 2 >nul
 echo [2/4] Limpiando y Compilando Java...
 if not exist "WEB-INF\classes" mkdir "WEB-INF\classes"
 
-javac -d WEB-INF/classes src/*.java
+javac -encoding UTF-8 -d WEB-INF/classes src/*.java
 if %errorlevel% neq 0 (
     echo ERROR DE COMPILACION. Revisa tu codigo.
     pause

@@ -43,7 +43,7 @@ public class MenuServlet extends HttpServlet {
         out.println("    <span class='text-white-50 small'><i class='bi bi-person-circle me-1'></i>" + escHtml(username) + " <span class='badge " + (esAdmin ? "bg-warning text-dark" : "bg-secondary") + " ms-1'>" + rol + "</span></span>");
         out.println("    <a href='" + req.getContextPath() + "/logout' class='btn btn-outline-light btn-sm'><i class='bi bi-box-arrow-right me-1'></i>Salir</a>");
         out.println("  </div>");
-        out.println("</nav>");
+        out.println("</nav>"); 
 
         // Contenido principal
         out.println("<main class='container py-5 flex-grow-1'>");
