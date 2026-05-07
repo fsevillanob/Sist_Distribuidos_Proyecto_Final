@@ -45,7 +45,7 @@
         <url-pattern>/admin</url-pattern>
     </servlet-mapping>
 
-<!-- Tareas: lectura y visualización -->
+    <!-- Tareas: lectura y visualizacion -->
     <servlet>
         <servlet-name>TareaServlet</servlet-name>
         <servlet-class>TareaServlet</servlet-class>
@@ -55,7 +55,7 @@
         <url-pattern>/tareas</url-pattern>
     </servlet-mapping>
 
-    <!-- Tareas: creación -->
+    <!-- Tareas: creacion -->
     <servlet>
         <servlet-name>CrearTareaServlet</servlet-name>
         <servlet-class>CrearTareaServlet</servlet-class>
@@ -65,7 +65,7 @@
         <url-pattern>/tareas/crear</url-pattern>
     </servlet-mapping>
 
-    <!-- Tareas: actualización de estado -->
+    <!-- Tareas: actualizacion de estado -->
     <servlet>
         <servlet-name>ActualizarTareaServlet</servlet-name>
         <servlet-class>ActualizarTareaServlet</servlet-class>
@@ -75,7 +75,7 @@
         <url-pattern>/tareas/actualizar</url-pattern>
     </servlet-mapping>
 
-    <!-- Tareas: eliminación -->
+    <!-- Tareas: eliminacion -->
     <servlet>
         <servlet-name>EliminarTareaServlet</servlet-name>
         <servlet-class>EliminarTareaServlet</servlet-class>
@@ -84,6 +84,8 @@
         <servlet-name>EliminarTareaServlet</servlet-name>
         <url-pattern>/tareas/eliminar</url-pattern>
     </servlet-mapping>
+
+    <!-- Calendario: vista HTML -->
     <servlet>
         <servlet-name>CalendarioServlet</servlet-name>
         <servlet-class>CalendarioServlet</servlet-class>
@@ -92,6 +94,17 @@
         <servlet-name>CalendarioServlet</servlet-name>
         <url-pattern>/calendario</url-pattern>
     </servlet-mapping>
+
+    <!-- Calendario: feed JSON para FullCalendar -->
+    <servlet>
+        <servlet-name>CalendarioEventosServlet</servlet-name>
+        <servlet-class>CalendarioEventosServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CalendarioEventosServlet</servlet-name>
+        <url-pattern>/calendario/json</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>CrearUsuarioServlet</servlet-name>
         <servlet-class>CrearUsuarioServlet</servlet-class>
@@ -119,18 +132,17 @@
         <url-pattern>/admin/eliminar</url-pattern>
     </servlet-mapping>
 
-    <!-- Redirigir raíz al login -->
+    <!-- Redirigir raiz al login -->
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
-    <!-- Sesión de 30 minutos -->
+    <!-- Sesion de 30 minutos -->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
 
-
-    <!-- ENCODING UTF-8?  -->
+    <!-- Encoding UTF-8 -->
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
@@ -147,7 +159,5 @@
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
-
 
 </web-app>
