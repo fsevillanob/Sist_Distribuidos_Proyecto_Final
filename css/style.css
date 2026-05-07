@@ -75,7 +75,7 @@
 .btn-login:hover  { opacity: 0.9; }
 .btn-login:active { transform: scale(0.98); }
 
-/* ── Menú cards ───────────────────────────────────────────────── */
+/* ── Menú cards ──────────────────────────────────────────────── */
 .menu-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);

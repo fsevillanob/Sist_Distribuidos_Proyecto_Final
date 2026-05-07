@@ -82,7 +82,7 @@ public class MenuServlet extends HttpServlet {
         out.println("  <div class='col-md-4 col-sm-6'>");
         out.println("    <a href='tareas' class='text-decoration-none'>"); //rutas relativas, funciona, pero PENSAR en cambiar 
         out.println("      <div class='card menu-card h-100 text-center p-4'>");
-        out.println("        <div class='menu-icon mb-3'><i class='bi bi-calendar3'></i></div>");
+        out.println("        <div class='menu-icon mb-3'><i class='bi bi-list-check text-success'></i></div>");
         out.println("        <h4 class='card-title text-white'>Gestión de Tareas</h4>");
         out.println("        <p class='card-text text-white-50'>Organiza tus tareas.</p>");
         out.println("      </div>");
@@ -91,6 +91,8 @@ public class MenuServlet extends HttpServlet {
 
         out.println("  </div>"); // row
 
+        // Tarjeta Calendario
+        out.println("  <div class='row g-5 justify-content-center'>");
         out.println("  <div class='col-md-4 col-sm-6'>");
         out.println("    <a href='calendario' class='text-decoration-none'>");
         out.println("      <div class='card menu-card h-100 text-center p-4'>");
@@ -100,7 +102,7 @@ public class MenuServlet extends HttpServlet {
         out.println("      </div>");
         out.println("    </a>");
         out.println("  </div>");
-
+        out.println("  </div>");
 
 
 

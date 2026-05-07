@@ -48,7 +48,8 @@ xcopy /s /y "css" "%CATALINA_HOME%\webapps\%APP_NAME%\css\" 2>nul
 
 echo [4/4] Arrancando Tomcat...
 echo.
-echo  Aplicacion desplegada en: http://localhost:8080/%APP_NAME%
+echo  Aplicacion desplegada en: http://localhost:8082/%APP_NAME%
+REM http://localhost:8082/mi-app
 echo  Login por defecto -> admin / admin123
 echo.
 call catalina.bat run
